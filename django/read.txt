@@ -1,0 +1,323 @@
+Django
+
+ติดตั้ง
+1. ลงpython
+2.ลง pip install django
+3.ถ้าลง python หลายตัวหลาย libariy ให้ลง virtualenv
+
+สร้างโปรเจค django
+1.พิมพ์คำสั่งในcmd django-admin startproject ชื่อโปรเจค
+2.cd เข้าไป  1 step 
+3.เปิดใช้งาน server พิมพ์ python manage.py runserver
+4.สร้าง app พิมพ์ python manage.py startapp ชื่อ app
+
+ไฟล์ url 
+1.ทำการนำ app ที่สร้างมาใช้ แล้ว import views มา 
+'''from blogs import views'''
+    
+    กำหนด path
+    '''
+    urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('',views.hello,name='index') เส้นทาง,เรียกviews,ฟังก์ชั้่น,ชื่อpath 
+    '''
+ไฟล์ views
+    นำเอา '''' from django.http import HttpResponse '''
+    และสร้างfuction  ''''def hello(request):
+                            return HttpResponse("Hello")'''
+*สร้างไฟล์โฟลเดอร์  templates ไว้ที่โปรเจค เพื่อเก็บ ไฟล์ html css javascript
+ เข้าไปที่ไฟล์ setting หาคำว่า templates เพื่ออ้างอ้งโฟล์เดอร์ templates ที่เราสร้างว่าให้โปรเจครู้ว่าเราเก็บ templates ไว้ไหนโดยใช้คำสั่ง
+'''
+ TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR,'templates')],***********เปลี่ยนตรงนี้
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+ ]
+'''
+*สร้าง function ไว้ที่ views เพื่อเรียกใช้งานไฟล์ html โดยสร้างฟังก์ชั่นดังนี้
+'''
+def hello(request):
+    return render(request,'index.html,{'name':"บทความการท่องเที่ยวภาคเหนือ"}') ส่งไฟล์ ไปเรนเดอร์
+'''
+    'name' เป็นkey ที่เก็บค่าของข้อมูลเพื่อส่งค่าไปยังหน้าเว็บ โดยใช้เครื่องหมาย {{name}}เพื่อแสดงข้อมูล ของ key ที่หน้าเว็บ
+
+*tags = ["น้ำตก","ภูเขา","ทะเล","ป่าไม้"] ลูปข้อมูลใน tags ออกมาหน้าเว็บ
+ ใช้คำสั่ง 
+'''
+    <h3>ป้ายกำกับ</h3>
+    <ul>
+        {%for tag in tags %}
+        <li>{{tag}}</li>
+        {% endfor %}
+    </ul>
+'''
+*คำสั่ง if ในหน้าเว็บ
+ใน views	
+'''
+def hello(request):
+    tags = ["น้ำตก","ภูเขา","ทะเล","ป่าไม้"]
+    rating = 3
+    return render(request,'index.html',{
+        'name':"บทความการท่องเที่ยวภาคเหนือ",
+        'author':"Vorrathon",
+        'tags':tags,
+        'rating':rating
+    })
+'''
+ในไฟล์ html
+	'''
+{% if rating > 3 %}
+      <h3>ได้รับความนิยม</h3>
+{% else %}
+      <h3>ไม่ได้รับความนิยม</h3>
+{% endif %}   
+	'''
+*การสร้าง Layout โครงสร้างหน้าเว็บ
+    นำ bootstrap เข้ามาที่ไฟล์ Layout แล้วลบเนื้อหาด้านในให้หมด
+    แล้วพิมพ์ 
+    '''
+         <div class="container">
+            {% block content %}  
+            
+            
+
+            
+            {% endblock %}
+
+      </div>
+    '''
+  หน้าที่ต้องการใช้ layout ให้พิมพ์ ลบเนื้อหาให้หมด
+  '''
+    {% extends 'layout.html' %}
+    {% block content %}
+        เนื้อหา
+    {% endblock %}
+  '''
+
+ *method get จะส่งข้อมูลให้แสดงผลอยู่ที่หน้า url ด้วย สามารถปรับแก้ที่ url ได้
+'''
+  <form action="" method="get">
+'''
+*การส่งข้อมูลจาก แบบฟอร์ม get ไปที่ฟังก์ชั่นเพื่อ แสดงค่า
+'''
+def addBlogs(request):
+    name=request.GET['name'] #ค่าที่ได้จาก ฟอร์ม get อ้าวอิงจากชื่อinput เก็บไว้ที่ตัวแปร
+    description=request.GET['description']
+    return render(request,'result.html',{"name":name,"description":description}) # return key แล้วส่งค่าที่อยู่ใน key ออกไป
+'''
+
+**การส่งข้อมูลจาก แบบฟอร์ม get ไปที่ฟังก์ชั่นเพื่อ แสดงค่า
+    ต้องมี {% csrf_token %} เพื่อความปลอดภัยของข้อมูล ใน url ต้องไม่มี / กรณีส่งข้อมูลไปบันทึกไม่ได้ ลิงค์
+
+*ติดตั้ง mysqlclient พิมพ์คำสั่งในcmd
+'''
+pip install mysqlclient
+'''
+
+*การสร้าง model
+เข้าไปที่ ไฟล์ models.py ออกแบบการสร้างตารางในรูปแบบ โมเดล
+
+'''
+class Post(models.Model):
+    name=models.CharField(max_length=255)
+    desc=models.TextField() 
+'''
+
+*ทำการ ลง app ที่สร้างไว้ที่ไฟล์ setting.py เพื่อสร้าง migration ไฟล์
+'''
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'blogs', ****
+]
+'''
+*Setting database ในไฟล์ setting.py ให้เป็น mysql
+'''
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME':'djangodb',
+        'USER':'root',
+        'PASSWORD':'',
+        'HOST':'localhost',
+        'PORT':''
+    }
+}
+'''
+*สร้างโครง migration file เพื่อเตรียมอัพโหลดขึ้นฐานข้อมูล พิมพ์คำสั่งในcmd
+'''
+python manage.py makemigrations
+'''
+
+*เข้าไปดูโครงสร้าง migration ที่โฟล์เดอร์ migration
+
+'''
+class Migration(migrations.Migration):
+
+    initial = True
+
+    dependencies = [
+    ]
+
+    operations = [
+        migrations.CreateModel(
+            name='Post',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(max_length=255)),
+                ('desc', models.TextField()),
+            ],
+        ),
+    ]
+'''
+
+*อัพโครงสร้าง migration ขึ้นฐานข้อมูล โดยพิมพ์ cmd ดังนี้
+'''
+python manage.py migrate
+'''
+*สร้าง Admin พิมพ์คำสั่งใน cmd
+'''
+python3 manage.py createsuperuser
+:ชื่อ
+:email
+:PASSWORD
+:Re-PASSWORD
+'''
+
+*ให้ admin จัดการกับตัวโมเดล ไปที่ไฟล์ admin.py 
+'''
+from .models import Post    #import ตัวโมเดล
+    admin.site.register(Post)  #ให้ admin จัดการ model post
+'''
+
+*นำข้อมูลจาก ฐานข้อมูลมาแสดงที่หน้าเว็บ แบบ loop ในตาราง
+''' 
+from .models import Post  #นำmodels เข้ามาทำงานที่ views
+
+    data=Post.objects.all() #query ข้อมูลทั้งหมดของโมเดลโพสใน ไฟล์model มาแสดง
+    return render(request,'page1.html',{'posts':data})
+'''
+       
+*การนำข้อมูลใน มาแสดงหน้า html แบบ loop
+'''
+้<h2>แสดงข้อมูลบทความ</h2>
+<table class="table table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">รหัสบทความ</th>
+        <th scope="col">ชื่อบทความ</th>
+        <th scope="col">รายละเอียด</th>
+       
+      </tr>
+    </thead>
+    <tbody>
+        {% for post in posts %}
+      <tr>
+        <th scope="row">{{post.id}}</th>
+        <td>{{post.name}}</td>
+        <td>{{post.desc}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table> 
+'''
+* การนำค่าจากแบบ ฟอร์ม register ไปเก็บไว้ที่ฐานข้อมูล 
+    นำเอาโมเดล user มาใช้งาน ไปที่ไฟล์ views แล้วทำการนำ โมเดล User มาใช้
+
+*** INSERT DATA
+ '''
+from django.contrib.auth.models import User   
+
+def addRegis(request):
+    username =request.POST['username']
+    fname =request.POST['fname']
+    lname =request.POST['lname']
+    email =request.POST['email']
+    password =request.POST['password']
+    repassword =request.POST['repassword']
+
+    user=User.objects.create_user(    #จับคู่ตัวแปรที่รับมาจากชื่อของแบบForm POST กับ ชื่อใน Database เพื่อทำการ insert ข้อมูล
+        username=username,
+        first_name=fname,
+        last_name=lname,
+        email=email,
+        password=password
+    
+        )
+    user.save()
+
+'''
+
+* การ validate ฟอร์มlogin 
+  from django.shortcuts import render,redirect # นำเอา redirect มาใช้
+
+*กล่องแจ้งเตือน
+ นำเอา message จาก django มาใช้
+ '''
+ from django.contrib import messages
+ '''
+ จากนั้นใช้คำสั่ง
+ '''
+ def addRegis(request):
+    username =request.POST['username']
+    fname =request.POST['fname']
+    lname =request.POST['lname']
+    email =request.POST['email']
+    password =request.POST['password']
+    repassword =request.POST['repassword']
+
+    if password == repassword:
+        if User.objects.filter(username=username).exists():
+            messages.info(request,'usernameนี้มีคนใช้แล้ว') ****
+            return redirect('/registerForm')
+        elif User.objects.filter(email=email).exists():
+            messages.info(request,'Emailนี้มีคนใช้แล้ว')****
+            return redirect('/registerForm')
+        else :
+            user=User.objects.create_user(
+            username=username,
+            first_name=fname,
+            last_name=lname,
+            email=email,
+            password=password
+            )
+            user.save()
+            return redirect('/page1')
+    else :
+        messages.info(request,'รหัสผ่านไม่ตรงกัน')****
+        return redirect('/registerForm')
+ '''
+
+ * โค้ด login 
+ นำเอา 
+ from django.contrib.auth.models import User,auth ***
+ '''
+def login(request):
+    username = request.POST['username']
+    password = request.POST['password']
+   
+   #login เช็ค username กับ password ตรงกันในฐานข้อมูลไหม
+    
+    user=auth.authenticate(username=username,password=password) *** ถ้าชื่อกับpasswordมีใน database เข้าใช้งานได้เลย
+    if user is not None :
+        auth.login(request,user)
+        return redirect('/page1')
+    else:
+        msg=messages.info(request,"ไม่พบข้อมูล")
+        return redirect('/loginForm')
+'''
+

@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2 align="center">ลงชื่อเข้าใช้</h2>
+{% for message in messages %}
+    <div class="alert alert-danger" role="alert">
+        <b>{{message}}</b> 
+    </div>
+{% endfor %}
+<form action="/login" method="post">
+<div class ="form-group mb-2" >
+    {% csrf_token %}
+    <label for="">Username</label>
+    <input type="text" class="form-control" name="username" placeholder="กรอกusername">
+    <label for="">Password</label>
+    <input type="password" class="form-control" name="password" placeholder="กรอกpassword">
+   
+
+</div>
+    <input type="submit" value="Login" class="btn btn-success">
+    
+</form>
+
+
+{% endblock %}}

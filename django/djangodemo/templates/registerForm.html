@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2 align="center">แบบฟอร์มลงทะเบียน</h2>
+{% for message in messages %}
+    
+    <div class="alert alert-danger" role="alert">
+        <b>{{message}}</b> 
+    </div>
+{% endfor %}
+<form action="/addRegis" method="post">
+<div class ="form-group mb-2" >
+    {% csrf_token %}
+    <label for="">Username</label>
+    <input type="text" class="form-control" name="username" placeholder="กรอกusername" required>
+    <label for="">ชื่อ</label>
+    <input type="text" class="form-control" name="fname" placeholder="กรอกชื่อ" required>
+    <label for="">นามสกุล</label>
+    <input type="text" class="form-control" name="lname" placeholder="กรอกนามสกุล" required>
+    <label for="">email</label>
+    <input type="text" class="form-control" name="email" placeholder="กรอกemail" required>
+    <label for="">Password</label>
+    <input type="password" class="form-control" name="password" placeholder="กรอกpassword" required>
+    <label for="">Re-Password</label>
+    <input type="password" class="form-control" name="repassword" placeholder="กรอกRe-password" required>
+
+</div>
+    <input type="submit" value="ลงทะเบียน" class="btn btn-success">
+    
+</form>
+
+
+{% endblock %}}
